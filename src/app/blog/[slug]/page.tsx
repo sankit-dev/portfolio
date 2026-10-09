@@ -1,6 +1,6 @@
 import { allPosts } from "content-collections";
 import { formatDate } from "@/lib/utils";
-import { DATA } from "@/data/resume";
+import { SITE as DATA } from "@/data/site";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MDXContent } from "@content-collections/mdx/react";
@@ -114,7 +114,7 @@ export default async function Blog({
   }).replace(/</g, "\\u003c");
 
   return (
-    <section id="blog">
+    <section id="blog" className="page" style={{ paddingTop: 24 }}>
       <script
         type="application/ld+json"
         suppressHydrationWarning

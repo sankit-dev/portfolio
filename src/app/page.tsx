@@ -1,158 +1,112 @@
-/* eslint-disable @next/next/no-img-element */
-import BlurFade from "@/components/magicui/blur-fade";
-import BlurFadeText from "@/components/magicui/blur-fade-text";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { DATA } from "@/data/resume";
+import { FlickeringGrid } from "@/components/magicui/flickering-grid";
+import { CopyEmailButton } from "@/components/site/copy-email-button";
+import { TechIcon } from "@/components/site/icons";
+import { ScrambleName } from "@/components/site/scramble-name";
+import { SpotlightCard } from "@/components/site/spotlight-card";
+import { HONEST_STATS, PROJECTS, SITE, type TechName } from "@/data/site";
 import Link from "next/link";
-import Markdown from "react-markdown";
-import ContactSection from "@/components/section/contact-section";
-import HackathonsSection from "@/components/section/hackathons-section";
-import ProjectsSection from "@/components/section/projects-section";
-import WorkSection from "@/components/section/work-section";
-import { ArrowUpRight } from "lucide-react";
 
-const BLUR_FADE_DELAY = 0.04;
+const Tech = ({ name }: { name: TechName }) => (
+  <span className="tech">
+    <TechIcon name={name} />
+    {name}
+  </span>
+);
 
-export default function Page() {
+const shippedCount = PROJECTS.filter((p) => p.status === "shipped").length;
+
+export default function HomePage() {
   return (
-    <main className='min-h-dvh flex flex-col gap-14 relative'>
-      <section id='hero'>
-        <div className='mx-auto w-full max-w-2xl space-y-8'>
-          <div className='gap-2 gap-y-6 flex flex-col md:flex-row justify-between'>
-            <div className='gap-2 flex flex-col order-2 md:order-1'>
-              <BlurFadeText
-                delay={BLUR_FADE_DELAY}
-                className='text-3xl font-semibold tracking-tighter sm:text-4xl lg:text-5xl'
-                yOffset={8}
-                text={`Hi, I'm ${DATA.name.split(" ")[0]}`}
-              />
-              <BlurFadeText
-                className='text-muted-foreground max-w-[600px] md:text-lg lg:text-xl'
-                delay={BLUR_FADE_DELAY}
-                text={DATA.description}
-              />
-            </div>
-            <BlurFade delay={BLUR_FADE_DELAY} className='order-1 md:order-2'>
-              <Avatar className='size-24 md:size-32 border rounded-full shadow-lg ring-4 ring-muted'>
-                <AvatarImage alt={DATA.name} src={DATA.avatarUrl} />
-                <AvatarFallback>{DATA.initials}</AvatarFallback>
-              </Avatar>
-            </BlurFade>
-          </div>
+    <div className="page">
+      <div className="banner" aria-hidden="true">
+        <FlickeringGrid className="banner-grid" squareSize={4} gridGap={4} flickerChance={0.2} maxOpacity={0.35} />
+      </div>
+
+      <section style={{ padding: "0 2px" }}>
+        <div className="identity-row">
+          <div className="avatar">A</div>
+          <span className="pill fade-up" style={{ animationDelay: "0.3s" }}>
+            <span className="dot" />
+            <span className="shiny">{SITE.openTo}</span>
+          </span>
+        </div>
+
+        <ScrambleName name={SITE.name} />
+        <div className="role-line fade-up" style={{ animationDelay: "0.12s" }}>
+          <span>Software Engineer,</span>
+          <span className="roles-window">
+            <span className="roles-track">
+              {[...SITE.roles, SITE.roles[0]].map((role, i) => (
+                <span key={`${role}-${i}`}>{role}</span>
+              ))}
+            </span>
+          </span>
+        </div>
+
+        <p className="fade-up" style={{ margin: "26px 0 0", animationDelay: "0.22s" }}>
+          Hey, I&apos;m Ankit. I build stuff that <s className="dim">usually</s> works, mostly on the backend with{" "}
+          <Tech name="Node" />, <Tech name="Hono" />, <Tech name="Bun" /> and <Tech name="MongoDB" />, and on the frontend with{" "}
+          <Tech name="Next.js" /> and <Tech name="Tailwind" /> when nobody&apos;s looking.
+        </p>
+        <p className="fade-up" style={{ margin: "16px 0 0", animationDelay: "0.3s" }}>
+          I&apos;m curious by default, so I tend to{" "}
+          <span className="hand-mark">
+            go way too deep into how things work
+            <svg viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M2 8C60 3 120 11 180 6C230 2 270 9 298 5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+            </svg>
+          </span>
+          , and honestly I enjoy it. This year I&apos;m on a builder arc: one app and two web products, shipped in public.
+        </p>
+
+        <div className="btn-row fade-up" style={{ animationDelay: "0.4s" }}>
+          <CopyEmailButton email={SITE.email} />
+          <a className="btn-ghost" href={SITE.resumeUrl}>Resume</a>
+          <span className="dim" style={{ fontSize: 14 }}>or DM me on X</span>
         </div>
       </section>
-      <section id='about'>
-        <div className='flex min-h-0 flex-col gap-y-4'>
-          <BlurFade delay={BLUR_FADE_DELAY * 3}>
-            <h2 className='text-xl font-bold'>About</h2>
-          </BlurFade>
-          <BlurFade delay={BLUR_FADE_DELAY * 4}>
-            <div className='prose max-w-full text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert'>
-              <Markdown>{DATA.summary}</Markdown>
-            </div>
-          </BlurFade>
-        </div>
-      </section>
-      <section id='skills'>
-        <div className='flex min-h-0 flex-col gap-y-4'>
-          <BlurFade delay={BLUR_FADE_DELAY * 9}>
-            <h2 className='text-xl font-bold'>Skills</h2>
-          </BlurFade>
-          <div className='flex flex-wrap gap-2'>
-            {DATA.skills.map((skill, id) => (
-              <BlurFade
-                key={skill.name}
-                delay={BLUR_FADE_DELAY * 10 + id * 0.05}
-              >
-                <div className='border bg-background border-border ring-2 ring-border/20 rounded-xl h-8 w-fit px-4 flex items-center gap-2'>
-                  {skill.icon && (
-                    <skill.icon className='size-4 rounded overflow-hidden object-contain' />
-                  )}
-                  <span className='text-foreground text-sm font-medium'>
-                    {skill.name}
-                  </span>
-                </div>
-              </BlurFade>
+
+      <section style={{ marginTop: 64 }} aria-labelledby="arc-title">
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+          <h2 id="arc-title" className="section-title">
+            Builder arc <em>{shippedCount} of {PROJECTS.length} shipped</em>
+          </h2>
+          <div className="arc-bar" aria-hidden="true">
+            {PROJECTS.map((p, i) => (
+              <span key={p.name} className={p.status === "shipped" ? "done" : "todo"} style={{ animationDelay: `${0.6 + i * 0.2}s` }} />
             ))}
           </div>
         </div>
+        <SpotlightCard>
+          {PROJECTS.map((p) => (
+            <a key={p.name} className="project-row" href={p.url ?? "/projects"}>
+              <span style={{ fontWeight: 600 }}>{p.name}</span>
+              <span className="dim">~ {p.summary}</span>
+              <span style={{ flex: 1 }} />
+              <span className="label">{p.status}</span>
+              <span className="arrow" aria-hidden="true">↗</span>
+            </a>
+          ))}
+        </SpotlightCard>
+        <Link className="see-all" href="/projects">
+          See all projects <span aria-hidden="true">→</span>
+        </Link>
       </section>
-      <section id='projects'>
-        <BlurFade delay={BLUR_FADE_DELAY * 11}>
-          <ProjectsSection />
-        </BlurFade>
-      </section>
-      <section id='work'>
-        <div className='flex min-h-0 flex-col gap-y-6'>
-          <BlurFade delay={BLUR_FADE_DELAY * 5}>
-            <h2 className='text-xl font-bold'>Work Experience</h2>
-          </BlurFade>
-          <BlurFade delay={BLUR_FADE_DELAY * 6}>
-            <WorkSection />
-          </BlurFade>
+
+      <section style={{ marginTop: 56 }} aria-labelledby="stats-title">
+        <h2 id="stats-title" className="section-title">Honest stats</h2>
+        <div style={{ marginTop: 8 }}>
+          {HONEST_STATS.map((s) => (
+            <div key={s.label} className="stat">
+              <span>{s.label}</span>
+              <span className="leader" />
+              <span style={{ fontWeight: 600 }}>
+                {s.value} {"note" in s && <span className="dim" style={{ fontWeight: 400 }}>{s.note}</span>}
+              </span>
+            </div>
+          ))}
         </div>
       </section>
-      <section id='education'>
-        <div className='flex min-h-0 flex-col gap-y-6'>
-          <BlurFade delay={BLUR_FADE_DELAY * 7}>
-            <h2 className='text-xl font-bold'>Education</h2>
-          </BlurFade>
-          <div className='flex flex-col gap-8'>
-            {DATA.education.map((education, index) => (
-              <BlurFade
-                key={education.school}
-                delay={BLUR_FADE_DELAY * 8 + index * 0.05}
-              >
-                <Link
-                  href={education.href}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='flex items-center gap-x-3 justify-between group'
-                >
-                  <div className='flex items-center gap-x-3 flex-1 min-w-0'>
-                    {education.logoUrl ? (
-                      <img
-                        src={education.logoUrl}
-                        alt={education.school}
-                        className='size-8 md:size-10 p-1 border rounded-full shadow ring-2 ring-border overflow-hidden object-contain flex-none'
-                      />
-                    ) : (
-                      <div className='size-8 md:size-10 p-1 border rounded-full shadow ring-2 ring-border bg-muted flex-none' />
-                    )}
-                    <div className='flex-1 min-w-0 flex flex-col gap-0.5'>
-                      <div className='font-semibold leading-none flex items-center gap-2'>
-                        {education.school}
-                        <ArrowUpRight
-                          className='h-3.5 w-3.5 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200'
-                          aria-hidden
-                        />
-                      </div>
-                      <div className='font-sans text-sm text-muted-foreground'>
-                        {education.degree}
-                      </div>
-                    </div>
-                  </div>
-                  <div className='flex items-center gap-1 text-xs tabular-nums text-muted-foreground text-right flex-none'>
-                    <span>
-                      {education.start} - {education.end}
-                    </span>
-                  </div>
-                </Link>
-              </BlurFade>
-            ))}
-          </div>
-        </div>
-      </section>
-      <section id='hackathons'>
-        <BlurFade delay={BLUR_FADE_DELAY * 13}>
-          <HackathonsSection />
-        </BlurFade>
-      </section>
-      <section id='contact'>
-        <BlurFade delay={BLUR_FADE_DELAY * 16}>
-          <ContactSection />
-        </BlurFade>
-      </section>
-    </main>
+    </div>
   );
 }

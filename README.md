@@ -1,43 +1,38 @@
-# Portfolio [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdillionverma%2Fportfolio)
+# ankit.
 
-Built with next.js, [shadcn/ui](https://ui.shadcn.com/), and [magic ui](https://magicui.design/), deployed on Vercel.
+Personal site of Ankit Singh. Black and white, simple, a little playful.
 
-# Features
+Built with Next.js, Tailwind CSS and MDX. The previous design lives on the `archive/old-design` branch.
 
-- Setup only takes a few minutes by editing the [single config file](./src/data/resume.tsx)
-- Built using Next.js 14, React, Typescript, Shadcn/UI, TailwindCSS, Framer Motion, Magic UI
-- Includes a blog
-- Responsive for different devices
-- Optimized for Next.js and Vercel
+## Run it
 
-# Getting Started Locally
+```bash
+pnpm install
+pnpm dev
+```
 
-1. Clone this repository to your local machine:
+## Edit content
 
-   ```bash
-   git clone https://github.com/dillionverma/portfolio
-   ```
+Almost everything you see is in one file: [`src/data/site.ts`](./src/data/site.ts).
 
-2. Move to the cloned directory
+- **Profile, links, email, roles**: `SITE`
+- **Work timeline**: `JOBS`
+- **Projects** (Web gets a browser frame, Mobile gets a phone frame): `PROJECTS`. Add a `screenshot` path to replace the placeholder.
+- **Blog**: `FEATURED_POST` and `EXTERNAL_POSTS` link out to X/Medium. Posts written on the site are `.mdx` files in [`content/`](./content).
+- **Books**: `BOOKS`, with what you liked, what didn't land, and a verdict.
 
-   ```bash
-   cd portfolio
-   ```
+Anything in `[square brackets]` is a placeholder waiting for real content.
 
-3. Install dependencies:
+## Pages
 
-   ```bash
-   pnpm install
-   ```
+| Route | What's there |
+| --- | --- |
+| `/` | Hero, about, builder arc, honest stats |
+| `/work` | Expandable work timeline |
+| `/projects` | Project showcase with All / Shipped / Cooking filters |
+| `/blog`, `/blog/[slug]` | Featured post, on-site MDX posts, posts elsewhere |
+| `/books` | Bookshelf; click a spine and the book opens |
 
-4. Start the local Server:
+## License
 
-   ```bash
-   pnpm dev
-   ```
-
-5. Open the [Config file](./src/data/resume.tsx) and make changes
-
-# License
-
-Licensed under the [MIT license](https://github.com/dillionverma/portfolio/blob/main/LICENSE.md).
+MIT

@@ -1,6 +1,6 @@
  
 import { ImageResponse } from "next/og";
-import { DATA } from "@/data/resume";
+import { SITE as DATA } from "@/data/site";
 
 export const runtime = "edge";
 
