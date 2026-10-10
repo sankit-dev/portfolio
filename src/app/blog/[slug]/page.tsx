@@ -1,12 +1,14 @@
 import { allPosts } from "content-collections";
 import { formatDate } from "@/lib/utils";
 import { SITE as DATA } from "@/data/site";
+import { readingDepth } from "@/data/rabbit-holes";
+import { DepthMeter } from "@/components/site/depth-meter";
+import { ReadingProgress } from "@/components/site/reading-progress";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MDXContent } from "@content-collections/mdx/react";
 import { mdxComponents } from "@/mdx-components";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 function getSortedPosts() {
   return [...allPosts].sort((a, b) => {
@@ -91,6 +93,7 @@ export default async function Blog({
   }
 
   const previousPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
+  const reading = readingDepth(post.content);
   const nextPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
 
   const getSlug = (post: (typeof sortedPosts)[0]) =>
@@ -115,6 +118,7 @@ export default async function Blog({
 
   return (
     <section id="blog" className="page" style={{ paddingTop: 24 }}>
+      <ReadingProgress />
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -122,72 +126,39 @@ export default async function Blog({
           __html: jsonLdContent,
         }}
       />
-      <div className="flex justify-start gap-4 items-center">
-        <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors border border-border rounded-lg px-2 py-1 inline-flex items-center gap-1 mb-6 group" aria-label="Back to Blog">
-          <ChevronLeft className="size-3 group-hover:-translate-x-px transition-transform" />
-          Back to Blog
-        </Link>
-      </div>
-      <div className="flex flex-col gap-4">
-        <h1 className="title font-semibold text-3xl md:text-4xl tracking-tighter leading-tight">
-          {post.title}
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          {formatDate(post.publishedAt)}
+      <Link href="/blog" className="see-all back-link">
+        <span aria-hidden="true">←</span> All writing
+      </Link>
+      <header className="post-head" data-src={`content/${post._meta.path}`}>
+        <h1 className="post-title">{post.title}</h1>
+        <p className="post-meta">
+          <span className="label">{formatDate(post.publishedAt)}</span>
+          <span className="label">~{reading.minutes} min</span>
+          <DepthMeter depth={reading.depth} />
         </p>
-      </div>
-      <div className="my-6 flex w-full items-center">
-        <div
-          className="flex-1 h-px bg-border"
-          style={{
-            maskImage:
-              "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)",
-            WebkitMaskImage:
-              "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)",
-          }}
-        />
-      </div>
-      <article className="prose max-w-full text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert">
+      </header>
+      <article className="prose post-body max-w-full text-pretty dark:prose-invert">
         <MDXContent code={post.mdx} components={mdxComponents} />
       </article>
 
-      <nav className="mt-12 pt-8 max-w-2xl">
-        <div className="flex flex-col sm:flex-row justify-between gap-4">
+      {(previousPost || nextPost) && (
+        <nav className="post-nav" aria-label="More posts">
           {previousPost ? (
-            <Link
-              href={`/blog/${getSlug(previousPost)}`}
-              className="group flex-1 flex flex-col gap-1 p-4 rounded-lg border border-border hover:bg-accent/50 transition-colors"
-            >
-              <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                <ChevronLeft className="size-3" />
-                Previous
-              </span>
-              <span className="text-sm font-medium group-hover:text-foreground transition-colors whitespace-normal wrap-break-word">
-                {previousPost.title}
-              </span>
+            <Link href={`/blog/${getSlug(previousPost)}`} className="post-nav-link">
+              <span className="label">← newer</span>
+              <span>{previousPost.title}</span>
             </Link>
           ) : (
-            <div className="hidden sm:block flex-1" />
+            <span />
           )}
-
-          {nextPost ? (
-            <Link
-              href={`/blog/${getSlug(nextPost)}`}
-              className="group flex-1 flex flex-col gap-1 p-4 rounded-lg border border-border hover:bg-accent/50 transition-colors text-right"
-            >
-              <span className="flex items-center justify-end gap-1 text-xs text-muted-foreground">
-                Next
-                <ChevronRight className="size-3" />
-              </span>
-              <span className="text-sm font-medium group-hover:text-foreground transition-colors whitespace-normal wrap-break-word">
-                {nextPost.title}
-              </span>
+          {nextPost && (
+            <Link href={`/blog/${getSlug(nextPost)}`} className="post-nav-link next">
+              <span className="label">older →</span>
+              <span>{nextPost.title}</span>
             </Link>
-          ) : (
-            <div className="hidden sm:block flex-1" />
           )}
-        </div>
-      </nav>
+        </nav>
+      )}
     </section>
   );
 }
