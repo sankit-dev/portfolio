@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Work", description: "Where I've work
 
 export default function WorkPage() {
   return (
-    <section className="page">
+    <section className="page" data-src="JobTimeline ← JOBS">
       <div className="page-head">
         <h1 className="page-title">Work <em>experience</em></h1>
         <span className="label">click to expand</span>

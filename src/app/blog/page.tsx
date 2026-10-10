@@ -15,7 +15,7 @@ export default function BlogPage() {
   const posts = [...allPosts].sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 
   return (
-    <section className="page">
+    <section className="page" data-src="content/*.mdx + EXTERNAL_POSTS">
       <div className="page-head">
         <h1 className="page-title">Writing <em>from the rabbit holes</em></h1>
       </div>

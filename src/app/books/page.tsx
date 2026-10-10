@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Books", description: "What I've read
 
 export default function BooksPage() {
   return (
-    <section className="page">
+    <section className="page" data-src="Bookshelf ← BOOKS">
       <div className="page-head">
         <h1 className="page-title">Shelf <em>pull a book, flip it open</em></h1>
         <span className="label">{BOOKS.length} books</span>
