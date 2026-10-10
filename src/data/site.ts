@@ -13,6 +13,10 @@ export const SITE = {
   openTo: "Open to remote startup roles",
   roles: ["backend tinkerer", "professional rabbit-hole diver", "ships it, then reads the docs"],
   footerNote: "made with curiosity, coffee and Claude",
+  // Drives the local-time line on the home page.
+  timeZone: "Asia/Kolkata",
+  place: "India",
+  githubUser: "sankit-dev",
   socials: {
     github: "https://github.com/sankit-dev",
     x: "#",
@@ -157,6 +161,10 @@ export type Book = {
   disliked: string[];
   verdict: Verdict;
   forWho: string;
+  // Optional: the cover's main colour (hex) for the spine and cover, and a cover image URL.
+  // Open Library covers work well: https://covers.openlibrary.org/b/isbn/<ISBN>-M.jpg
+  color?: string;
+  cover?: string;
 };
 
 const LIKED = ["[Something that stuck with you]", "[An idea you now use at work]", "[A line or chapter you loved]"];
@@ -171,3 +179,16 @@ export const BOOKS: Book[] = [
   { title: "[Book title]", author: "[Author]", status: "Read", liked: LIKED, disliked: DISLIKED, verdict: "SKIP", forWho: "[Read this instead: …]" },
   { title: "[Book title]", author: "[Author]", status: "Up next", liked: ["[Haven't started yet]"], disliked: ["[Nothing yet]"], verdict: "UP NEXT", forWho: "[Why it is next]" },
 ];
+
+// Quotes on the home page. Swap in the ones you actually come back to.
+export type Quote = { text: string; author: string };
+
+export const QUOTES: Quote[] = [
+  { text: "Make it work, make it right, make it fast.", author: "Kent Beck" },
+  { text: "Simplicity is prerequisite for reliability.", author: "Edsger W. Dijkstra" },
+  { text: "The best way to predict the future is to invent it.", author: "Alan Kay" },
+  { text: "Premature optimization is the root of all evil.", author: "Donald Knuth" },
+  { text: "Talk is cheap. Show me the code.", author: "Linus Torvalds" },
+];
+
+export const currentlyReading = () => BOOKS.find((b) => b.progress !== undefined) ?? null;
