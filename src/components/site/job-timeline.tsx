@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import type { Job } from "@/data/site";
 import { ChevronDownIcon } from "./icons";
 
@@ -31,20 +31,22 @@ export const JobTimeline = ({ jobs }: { jobs: Job[] }) => {
               <span className="label" style={{ whiteSpace: "nowrap" }}>{job.when}</span>
               <ChevronDownIcon className="job-chev" />
             </button>
-            {open && (
-              <div id={bodyId} className="job-body">
-                <ul className="dim" style={{ margin: 0, paddingLeft: 18, listStyle: "disc", fontSize: 16 }}>
-                  {job.points.map((point) => (
-                    <li key={point} style={{ marginTop: 4 }}>{point}</li>
-                  ))}
-                </ul>
-                <div className="chips" style={{ marginTop: 12 }}>
-                  {job.stack.map((s) => (
-                    <span key={s} className="chip">{s}</span>
-                  ))}
+            <div id={bodyId} className="job-body" data-open={open} inert={!open}>
+              <div className="job-body-clip">
+                <div className="job-body-content">
+                  <ul className="dim" style={{ margin: 0, paddingLeft: 18, listStyle: "disc", fontSize: 16 }}>
+                    {job.points.map((point, n) => (
+                      <li key={point} className="job-reveal" style={{ marginTop: 4, "--n": n } as CSSProperties}>{point}</li>
+                    ))}
+                  </ul>
+                  <div className="chips job-reveal" style={{ marginTop: 12, "--n": job.points.length } as CSSProperties}>
+                    {job.stack.map((s) => (
+                      <span key={s} className="chip">{s}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            )}
+            </div>
           </div>
         );
       })}

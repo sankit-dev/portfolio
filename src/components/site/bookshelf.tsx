@@ -10,6 +10,17 @@ const SPINE_SIZES = [
 ];
 const TONE_COUNT = 7;
 
+// Black or white text, whichever reads better on the cover colour (WCAG relative luminance).
+const textOn = (hex: string) => {
+  const [r, g, b] = [1, 3, 5].map((i) => {
+    const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.4 ? "#111111" : "#ffffff";
+};
+
+const coverStyle = (book: Book) => (book.color ? { background: book.color, color: textOn(book.color) } : undefined);
+
 type ShelfState = { index: number; open: boolean; animate: boolean; version: number };
 
 const BookPages = ({ book, open, animate, onToggle }: { book: Book; open: boolean; animate: boolean; onToggle: () => void }) => {
@@ -36,10 +47,14 @@ const BookPages = ({ book, open, animate, onToggle }: { book: Book; open: boolea
       </div>
 
       <div className={`cover ${coverAnim}`}>
-        <button type="button" className="face cover-front tone-0" onClick={onToggle} aria-label={`${open ? "Close" : "Open"} ${book.title}`}>
+        <button type="button" className={`face cover-front${book.color ? "" : " tone-0"}`} style={coverStyle(book)} onClick={onToggle} aria-label={`${open ? "Close" : "Open"} ${book.title}`}>
           <span className="mono" style={{ fontSize: 11, letterSpacing: "0.1em", opacity: 0.75, textTransform: "uppercase" }}>{book.status}</span>
           <span className="serif" style={{ marginTop: 18, fontSize: 34, lineHeight: 1.05 }}>{book.title}</span>
           <span style={{ marginTop: 10, fontSize: 14, opacity: 0.8 }}>{book.author}</span>
+          {book.cover && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img className="cover-img" src={book.cover} alt="" loading="lazy" />
+          )}
           <span aria-hidden="true" style={{ marginTop: "auto", width: 40, height: 1.5, background: "currentColor", opacity: 0.5 }} />
           <span style={{ marginTop: 12, fontSize: 13, opacity: 0.85 }}>Open the book →</span>
         </button>
@@ -81,11 +96,11 @@ export const Bookshelf = ({ books }: { books: Book[] }) => {
             <button
               key={`${b.title}-${i}`}
               type="button"
-              className={`spine tone-${i % TONE_COUNT}`}
+              className={`spine${b.color ? "" : ` tone-${i % TONE_COUNT}`}`}
               aria-pressed={state.index === i}
               aria-label={`${b.title} by ${b.author}`}
               onClick={() => pick(i)}
-              style={{ width: size.w, height: size.h }}
+              style={{ width: size.w, height: size.h, ...coverStyle(b) }}
             >
               <span>{b.title}</span>
             </button>
