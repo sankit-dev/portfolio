@@ -39,19 +39,6 @@ export const MailIcon = (p: IconProps) => (
   </svg>
 );
 
-export const SunIcon = (p: IconProps) => (
-  <svg width="17" height="17" viewBox="0 0 20 20" strokeWidth="1.6" strokeLinecap="round" {...base} {...p}>
-    <circle cx="10" cy="10" r="3.6" />
-    <path d="M10 1.8V3.6M10 16.4V18.2M1.8 10H3.6M16.4 10H18.2M4.2 4.2L5.5 5.5M14.5 14.5L15.8 15.8M4.2 15.8L5.5 14.5M14.5 5.5L15.8 4.2" />
-  </svg>
-);
-
-export const MoonIcon = (p: IconProps) => (
-  <svg width="17" height="17" viewBox="0 0 20 20" strokeWidth="1.6" strokeLinejoin="round" {...base} {...p}>
-    <path d="M16.8 12.6A7 7 0 0 1 7.4 3.2A7 7 0 1 0 16.8 12.6Z" />
-  </svg>
-);
-
 export const ChevronDownIcon = (p: IconProps) => (
   <svg width="14" height="14" viewBox="0 0 14 14" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...base} {...p}>
     <path d="M3.5 5.5L7 9L10.5 5.5" />

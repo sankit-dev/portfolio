@@ -2,19 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useTheme } from "next-themes";
 import { NAV } from "@/data/site";
-import { MoonIcon, SunIcon } from "./icons";
+import { openPalette } from "@/lib/overlays";
+import { ThemeToggle } from "./theme-toggle";
 
 const isActive = (pathname: string, href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
 export const SiteHeader = () => {
   const pathname = usePathname();
-  const { resolvedTheme, setTheme } = useTheme();
-  const toggleTheme = () => setTheme(resolvedTheme === "dark" ? "light" : "dark");
 
   return (
-    <header className="site-header">
+    <header className="site-header" data-src="SiteHeader ← NAV">
       <Link href="/" className="logo" aria-label="ankit, home">
         ankit.
       </Link>
@@ -29,11 +27,14 @@ export const SiteHeader = () => {
             {item.label}
           </Link>
         ))}
-        {/* Both icons render; CSS shows the right one from the .dark class, so no hydration mismatch. */}
-        <button type="button" className="icon-btn" aria-label="Toggle theme" onClick={toggleTheme}>
-          <MoonIcon className="theme-icon-moon" />
-          <SunIcon className="theme-icon-sun" />
+        <button type="button" className="theme-toggle palette-btn" aria-label="Open command palette" onClick={openPalette}>
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true">
+            <circle cx="7" cy="7" r="4.8" />
+            <path d="M10.6 10.6L14 14" />
+          </svg>
+          <kbd className="palette-kbd">⌘K</kbd>
         </button>
+        <ThemeToggle />
       </nav>
     </header>
   );
